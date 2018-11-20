@@ -1,57 +1,61 @@
-// 0 = 36
-// 00:05 = 84
-// distance between 5 second chucks in pixels = 48
-// 1 second = 9.6
+//Processing code for Contingencies_v1's real-time score.
 
-//make if stateents to ove red square with the form
+//Declare Global Variables
+PImage[] imgs = new PImage[18]; // Init array from images
+PImage img; // current image
+int curImg = 0, array_selector=580; //current image index, init red box position
+float x, y; //Init x,y values of scrolling red bar 
+float tick, tick1; //Float for moving the scrolling red bar across the screen
+int secondValue, thirdValue, fourthValue, fifthValue, sixthValue, seventhValue, eighthValue, ninthValue, tenthValue, eleventhValue, twelvthValue, thirteenthValue,   fourteenthValue, fiftheenthValue, sixteenthValue=0; //Array from SUperCollider
+float firstValue; //Audio clock from SuperCollider for accurate sync.
+PFont f; //Font
+String sc_address=""; //String containing WIFI address for SuperCollider connectivity
 
-PImage[] imgs = new PImage[18]; // loaded images
-PImage img;                    // current image
-int curImg = 0, array_selector=580;  
-float x, y; 
-float tick, tick1;
-int secondValue, thirdValue, fourthValue, fifthValue, sixthValue, seventhValue, eighthValue, ninthValue, tenthValue, eleventhValue, twelvthValue, thirteenthValue,   fourteenthValue, fiftheenthValue, sixteenthValue=0;
-float firstValue;
-PFont f;
-
-import oscP5.*;
+//Import OSC libraries
+import oscP5.*; 
 import netP5.*;
 
-OscP5 oscP5;                 // objet for OSC send and receive
-NetAddress myRemoteLocation;  // objet for service address
-
+OscP5 oscP5; // object for OSC send and receive
+NetAddress myRemoteLocation; // object for service address
 
 void setup()
 {
-  
+  //Screensize/Stroke Parameters
   size(1275,825);
   smooth(8);
   strokeWeight(4);
   stroke(255, 0, 0);
 
-   for(int i = 0; i < imgs.length; i ++){
-    imgs[i] = loadImage("img"+(i)+".png");
-    imgs[i].resize(imgs[i].width/4, imgs[i].height/4);
-  }
+  //Load images into an array. Resize images to fit screen size.
+  for(int i = 0; i < imgs.length; i ++){
+  imgs[i] = loadImage("img"+(i)+".png");
+  imgs[i].resize(imgs[i].width/4, imgs[i].height/4);
+   }
   
-  img = imgs[curImg];
+  //Init first image
+  img = imgs[curImg]; 
+ 
+ 
+  //Starting point of scrolling red bar.
+  x = 36; y = height;
   
-
-  x = 36; y = height;   // start at left, center
-  
+  //Init font
   f = createFont("Arial",46,true);
   
-  oscP5 = new OscP5(this,4859); // start OSC and listen port ...
-  // set remote location to localhost SuperColider port
-  myRemoteLocation = new NetAddress("",4859);
+  //Start OSC and listen port...
+  oscP5 = new OscP5(this,4859); 
+  
+  //Set remote location to localhost SuperColider port
+  myRemoteLocation = new NetAddress(sc_address,4859);
 }
 
 void draw()
 {
-  
+  //Location of the red square depending on which formal module is taking place.
   if (sixteenthValue == -1) {
     array_selector=580;
   }
+  
   if (sixteenthValue == 0) {
     array_selector=580;
   }
@@ -104,30 +108,30 @@ void draw()
     array_selector=1006;
   }
   
+  //Draw image
+  imageMode(CORNER); //Specify image placement at the corners
+  background(0); //Background
+  image(imgs[secondValue], 0, 0); //Draw image
   
-
-  imageMode(CORNER); // specify it at the corners, easier for backgrounds
-  background(0);
-  image(imgs[secondValue], 0, 0);
-  stroke(255, 0, 0);
+  //Draw array at top of the screen
+  stroke(255, 0, 0);  
   line(x,65,x, y);
   textFont(f,16);
   fill(255, 0, 0); 
-  stroke(255, 0, 0);// STEP 3 Specify font to be used
+  stroke(255, 0, 0);
   rect(array_selector, 3, 30, 30);  
   stroke(0);
-  fill(0);    // STEP 4 Specify font color 
+  fill(0); 
   textSize(32);
   text(thirdValue + "  " + fourthValue + "  " + fifthValue + "  " + sixthValue + "  " + seventhValue + "  " + eighthValue + "  " + ninthValue + "  " + tenthValue + "  " + eleventhValue + "  " + twelvthValue+ "  " + thirteenthValue + "  " +  fourteenthValue  + "  " + fiftheenthValue ,width/2-50,30); 
-
-
-   // take one step to the right
 
 }
 
 void oscEvent(OscMessage theOscMessage) 
 {  
-  // get the first value as an integer
+  //Get values from SuperCollider
+  
+  // get the first value as an float, the rest as ints
   firstValue = theOscMessage.get(0).floatValue();
   secondValue = theOscMessage.get(1).intValue();
   thirdValue = theOscMessage.get(2).intValue();
@@ -144,15 +148,12 @@ void oscEvent(OscMessage theOscMessage)
   fourteenthValue = theOscMessage.get(13).intValue();
   fiftheenthValue = theOscMessage.get(14).intValue();
   sixteenthValue = theOscMessage.get(15).intValue();
-
- 
-   
-  
-  println(firstValue+ "  " +secondValue+ "  " +thirdValue + "  " + fourthValue + "  " + fifthValue + "  " + sixthValue + "  " + seventhValue + "  " + eighthValue + "  " + ninthValue + "  " + tenthValue + "  " + eleventhValue + "  " + twelvthValue+ "  " + thirteenthValue + "  " +  fourteenthValue  + "  " + fiftheenthValue);
+    
+  //Move scolling red bar 
   tick = (firstValue % 3600);
   tick1 = tick * 0.94;
-
   x = tick1;
-   // STEP 5 Display Text
   
+  //Print array from SuperCollider: for debugging
+  //println(firstValue+ "  " +secondValue+ "  " +thirdValue + "  " + fourthValue + "  " + fifthValue + "  " + sixthValue + "  " + seventhValue + "  " + eighthValue + "  " + ninthValue + "  " + tenthValue + "  " + eleventhValue + "  " + twelvthValue+ "  " + thirteenthValue + "  " +  fourteenthValue  + "  " + fiftheenthValue);
 }
