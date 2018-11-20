@@ -1,1 +1,9 @@
-# contingencies_v1 
+
+Contingencies_v1
+for cornet, bass, percussion and Computer
+Hunter Brown
+©2018
+
+Last Updated: 10/23/18
+Real-time processing score for Contingencies_v1.
+
