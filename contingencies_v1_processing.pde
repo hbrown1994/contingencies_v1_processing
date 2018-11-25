@@ -9,7 +9,7 @@ float tick, tick1; //Float for moving the scrolling red bar across the screen
 int secondValue, thirdValue, fourthValue, fifthValue, sixthValue, seventhValue, eighthValue, ninthValue, tenthValue, eleventhValue, twelvthValue, thirteenthValue,   fourteenthValue, fiftheenthValue, sixteenthValue=0; //Array from SUperCollider
 float firstValue; //Audio clock from SuperCollider for accurate sync.
 PFont f; //Font
-String sc_address=""; //String containing WIFI address for SuperCollider connectivity
+String sc_address="127.0.0.1"; //String containing WIFI address for SuperCollider connectivity
 
 //Import OSC libraries
 import oscP5.*; 
