@@ -5,5 +5,5 @@ Hunter Brown
 ©2018
 
 Last Updated: 10/23/18
-Real-time processing score for Contingencies_v1.
+Real-time score for Contingencies_v1 in Processing.
 
